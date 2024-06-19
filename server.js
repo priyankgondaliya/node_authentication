@@ -11,6 +11,7 @@ mongoose.connect(process.env.DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   tls: true,
+  tlsInsecure: true, // This is to ignore self-signed certificates if any, remove if not needed
 });
 
 const db = mongoose.connection;
