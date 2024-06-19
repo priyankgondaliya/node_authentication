@@ -10,6 +10,7 @@ const app = express();
 mongoose.connect(process.env.DB, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  tls: true,
 });
 
 const db = mongoose.connection;
