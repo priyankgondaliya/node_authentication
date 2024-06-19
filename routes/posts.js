@@ -33,37 +33,37 @@ router.get("/", async (req, res) => {
       };
     }
 
-    // const posts = await Post.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: "users",
-    //       localField: "author",
-    //       foreignField: "_id",
-    //       as: "authorDetails",
-    //     },
-    //   },
-    //   {
-    //     $unwind: "$authorDetails",
-    //   },
-    //   {
-    //     $match: matchStage,
-    //   },
-    //   {
-    //     $project: {
-    //       title: 1,
-    //       content: 1,
-    //       "authorDetails.name": 1,
-    //       "authorDetails.email": 1,
-    //       // Ensure to exclude password and other unnecessary fields
-    //       _id: 1,
-    //       author: 1,
-    //     },
-    //   },
-    //   {
-    //     $unset: "authorDetails.password",
-    //   },
-    // ]);
-    const posts = await Post.find();
+    const posts = await Post.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorDetails",
+        },
+      },
+      {
+        $unwind: "$authorDetails",
+      },
+      {
+        $match: matchStage,
+      },
+      {
+        $project: {
+          title: 1,
+          content: 1,
+          "authorDetails.name": 1,
+          "authorDetails.email": 1,
+          // Ensure to exclude password and other unnecessary fields
+          _id: 1,
+          author: 1,
+        },
+      },
+      {
+        $unset: "authorDetails.password",
+      },
+    ]);
+    // const posts = await Post.find();
     console.log(posts, "posts");
     res.json(posts);
   } catch (error) {
