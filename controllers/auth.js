@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/user");
 const sendgrid = require("@sendgrid/mail");
+require("dotenv").config();
 sendgrid.setApiKey(process.env.STRIPE_KEY_SECRET);
 
 const JWT_SECRET = "your_jwt_secret"; // Use a strong secret in production
@@ -68,22 +69,29 @@ exports.forgotPassword = async (req, res) => {
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
+    sendgrid.setApiKey(
+      `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`
+    );
+    // console.log(process.env.STRIPE_KEY_SECRET, "process.env.STRIPE_KEY_SECRET");
 
-    const resetUrl = `http://localhost:9000/auth/resetPassword/${resetToken}`;
+    const resetUrl = `https://nodeauthentication-production.up.railway.app/auth/resetPassword/${resetToken}`;
+    console.log(resetUrl, "resetUrl");
 
     const msg = {
       to: user.email,
-      from: "nik.theappideas@gmail.com",
+      from: "business@afterlib.com",
       subject: "Password Reset",
       text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.
       Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:
       ${resetUrl}
       If you did not request this, please ignore this email and your password will remain unchanged.`,
     };
+    console.log(msg, "msg");
 
     await sendgrid.send(msg);
     res.json({ message: "Password reset link sent to email" });
   } catch (error) {
+    console.log(error, "error");
     res.status(500).json({ error: error.message });
   }
 };
