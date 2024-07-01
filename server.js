@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
 const postRoutes = require("./routes/posts");
+const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
@@ -21,6 +23,11 @@ db.once("open", function () {
 });
 
 app.use(bodyParser.json());
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+app.use("/uploads", express.static(uploadDir));
 
 app.use("/auth", authRoutes);
 app.use("/posts", postRoutes);
