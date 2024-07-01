@@ -4,10 +4,7 @@ const crypto = require("crypto");
 const User = require("../models/user");
 const sendgrid = require("@sendgrid/mail");
 require("dotenv").config();
-sendgrid.setApiKey(
-  `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`
-);
-// console.log(process.env.STRIPE_KEY_SECRET, "process.env.STRIPE_KEY_SECRET");
+sendgrid.setApiKey(process.env.STRIPE_KEY_SECRET);
 
 const JWT_SECRET = "your_jwt_secret"; // Use a strong secret in production
 
