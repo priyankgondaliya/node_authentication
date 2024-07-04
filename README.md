@@ -1,4 +1,4 @@
-# My Node.js Project
+# node_authentication
 
 ## Description
 
