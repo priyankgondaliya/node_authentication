@@ -3,12 +3,14 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/user");
 const sendgrid = require("@sendgrid/mail");
+const { handleValidationErrors } = require("../validation/validationHandler");
 require("dotenv").config();
 sendgrid.setApiKey(process.env.STRIPE_KEY_SECRET);
 
 const JWT_SECRET = "your_jwt_secret"; // Use a strong secret in production
 
 exports.register = async (req, res) => {
+  handleValidationErrors(req, res);
   const { name, email, password } = req.body;
   try {
     const user = new User({ name, email, password });
@@ -24,6 +26,7 @@ exports.register = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
+  handleValidationErrors(req, res);
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -41,6 +44,7 @@ exports.login = async (req, res) => {
 };
 
 exports.changePassword = async (req, res) => {
+  handleValidationErrors(req, res);
   const { oldPassword, newPassword } = req.body;
   try {
     const user = await User.findById(req.user.id);
